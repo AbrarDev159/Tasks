@@ -1,0 +1,20 @@
+version: '3'
+services:
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #    - "5173:5173"
+  #   environment:
+  #     VITE_API_URL: "http://[ip address]:3000/"
+  db:
+    image: postgres:alpine3.17
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres_db
+    ports:
+      - 5432:5432 
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
