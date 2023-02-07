@@ -3,7 +3,9 @@ import express from 'express'
 
 const prisma = new PrismaClient()
 const app = express()
+const cors = require('cors');
 
+app.use(cors({ origin: '*' }));
 app.use(express.json())
 
 // Tasks API
@@ -56,6 +58,15 @@ app.get('/collections', async (req, res) => {
     res.json(collections)
 })
 
+app.get(`/collection/:id`, async (req, res) => {
+    const { id } = req.params
+    const collection = await prisma.collection.findUnique({
+        where: { id: String(id) },
+        include: { tasks: true },
+    })
+    res.json(collection)
+})
+
 app.post(`/collection`, async (req, res) => {
     const { name } = req.body
     const result = await prisma.collection.create({
@@ -75,6 +86,22 @@ app.put('/collection/:id', async (req, res) => {
         },
     })
     res.json(collection)
+})
+
+app.put(`/collection/:id/task`, async (req, res) => {
+    const { id } = req.params
+    const { content } = req.body
+    const result = await prisma.collection.update({
+        where: { id: String(id) },
+        data: {
+            tasks: {
+                create: [
+                    { content: content }
+                ]
+            },
+        },
+    })
+    res.json(result)
 })
 
 app.delete(`/collection/:id`, async (req, res) => {

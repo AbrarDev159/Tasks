@@ -3,20 +3,10 @@
   import axios from 'axios'
 
   const tasks = ref([])
-  const collections = ref([])
   onMounted(() => {
     axios.get('tasks')
       .then(response => {
         tasks.value = response.data
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    axios.get('collections')
-      .then(response => {
-        collections.value = response.data
         console.log(response.data)
       })
       .catch(error => {
@@ -59,7 +49,8 @@
     if (confirm(`Do you really want to delete ${task_name}? `)) {
       axios.delete(`task/${task_id}`)
         .then(response => {
-          location.reload();
+          let i = tasks.value.map(data => data.id).indexOf(task_id);
+          tasks.value.splice(i, 1);
           console.log(response.data)
         })
         .catch(error => {
@@ -68,47 +59,32 @@
     }
   }
 
-  const name = ref()
-  function addCollection() {
-    axios.post('collection', {
-      name: name.value,
-    })
-      .then(response => {
-        name.value = ''
-        collections.value.push(response.data)
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
+  // const name2 = ref()
+  // function updateCollection(collection_id) {
+  //   axios.put(`collection/${collection_id}`, {
+  //     name: name2.value,
+  //   })
+  //     .then(response => {
+  //       location.reload();
+  //       console.log(response.data)
+  //     })
+  //     .catch(error => {
+  //       console.log(error)
+  //     })
+  // }
 
-  const name2 = ref()
-  function updateCollection(collection_id) {
-    axios.put(`collection/${collection_id}`, {
-      name: name2.value,
-    })
-      .then(response => {
-        location.reload();
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  function deleteCollection(collection_id, collection_name) {
-    if (confirm(`Do you really want to delete ${collection_name}? `)) {
-      axios.delete(`collection/${collection_id}`)
-        .then(response => {
-          location.reload();
-          console.log(response.data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
-  }
+  // function deleteCollection(collection_id, collection_name) {
+  //   if (confirm(`Do you really want to delete ${collection_name}? `)) {
+  //     axios.delete(`collection/${collection_id}`)
+  //       .then(response => {
+  //         location.reload();
+  //         console.log(response.data)
+  //       })
+  //       .catch(error => {
+  //         console.log(error)
+  //       })
+  //   }
+  // }
 </script>
 
 <template>
@@ -119,36 +95,6 @@
         <button class="btn btn-primary" type="submit">Submit</button>
       </div>
     </form>
-
-    <form v-on:submit.prevent="addCollection" class="mt-3">
-      <div class="input-group mb-3">
-        <input v-model="name" class="form-control" type="text" placeholder="Add Collection">
-        <button class="btn btn-primary" type="submit">Submit</button>
-      </div>
-    </form>
-
-    <div v-for="collection in collections" :key="collection.id" class="mb-2">
-      <div class="card">
-        <div class="card-body text-center">
-          <div class="mb-3">
-            <div class="dropdown float-end">
-              <a class="text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical float-end" viewBox="0 0 16 16">
-                  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                </svg>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" @click="updateCollection(collection.id)" type="button">Update Collection</a></li>
-                <li><a class="dropdown-item" @click="deleteCollection(collection.id, collection.name)" type="button">Delete Collection</a></li>
-              </ul>
-            </div>
-            <span>collection: {{ collection.name }}</span>
-            <input v-model.lazy="name2" type="text" class="form-control">
-          </div>
-        </div>
-      </div>
-    </div>
-
 
     <div v-for="task in tasks" :key="task.id" class="mb-2">
       <div class="card">
