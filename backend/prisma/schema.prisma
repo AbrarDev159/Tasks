@@ -14,6 +14,7 @@ model Task {
   id           String      @id @unique @default(uuid())
   content      String?
   status       Boolean     @default(false)
+  createdAt    DateTime    @default(now())
   Collection   Collection? @relation(fields: [collectionId], references: [id])
   collectionId String?
 }

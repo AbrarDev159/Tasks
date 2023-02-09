@@ -58,33 +58,6 @@
         })
     }
   }
-
-  // const name2 = ref()
-  // function updateCollection(collection_id) {
-  //   axios.put(`collection/${collection_id}`, {
-  //     name: name2.value,
-  //   })
-  //     .then(response => {
-  //       location.reload();
-  //       console.log(response.data)
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //     })
-  // }
-
-  // function deleteCollection(collection_id, collection_name) {
-  //   if (confirm(`Do you really want to delete ${collection_name}? `)) {
-  //     axios.delete(`collection/${collection_id}`)
-  //       .then(response => {
-  //         location.reload();
-  //         console.log(response.data)
-  //       })
-  //       .catch(error => {
-  //         console.log(error)
-  //       })
-  //   }
-  // }
 </script>
 
 <template>
@@ -97,25 +70,46 @@
     </form>
 
     <div v-for="task in tasks" :key="task.id" class="mb-2">
+
       <div class="card">
         <div class="card-body text-center">
-          <div class="mb-3">
-            <div class="dropdown float-end">
-              <a class="text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical float-end" viewBox="0 0 16 16">
-                  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                </svg>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" @click="updateTask(task.id)" type="button">Update Task</a></li>
-                <li><a class="dropdown-item" @click="deleteTask(task.id, task.content)" type="button">Delete Task</a></li>
-              </ul>
-            </div>
-            <input @change="updateTask(task.id)" v-model.lazy="status" :checked="task.status" class="form-check-input float-start" type="checkbox" id="status" />
-            <span v-if="task.status" class="text-decoration-line-through">task: {{ task.content }}</span>
-            <span v-else>task: {{ task.content }}</span>
-            <input v-model.lazy="content2" type="text" class="form-control">
+          <div class="dropdown float-end">
+            <a class="text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical float-end" viewBox="0 0 16 16">
+                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+              </svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" data-bs-toggle="modal" :data-bs-target="`#updateModal${task.id}`" type="button">Update Task</a></li>
+              <li><a class="dropdown-item" @click="deleteTask(task.id, task.content)" type="button">Delete Task</a></li>
+            </ul>
           </div>
+          <input @change="updateTask(task.id)" v-model.lazy="status" :checked="task.status" class="form-check-input float-start" type="checkbox" id="status" />
+          <span v-if="task.status" class="text-decoration-line-through">task: {{ task.content }}</span>
+          <span v-else>task: {{ task.content }}</span>
+
+          <div class="modal fade" :id="`updateModal${task.id}`" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel2">Edit {{ task.content }}</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form v-on:submit.prevent="updateTask(task.id)" class="mt-3">
+                    <div class="input-group mb-3">
+                      <input v-model="content2" class="form-control" type="text" placeholder="Update Task">
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button @click="updateTask(task.id)" type="button" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

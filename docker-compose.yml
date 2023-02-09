@@ -1,11 +1,19 @@
 version: '3'
 services:
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #    - "5173:5173"
-  #   environment:
-  #     VITE_API_URL: "http://[ip address]:3000/"
+  frontend:
+    build: ./frontend
+    ports:
+     - "5173:5173"
+    environment:
+      VITE_API_URL: "http://[ip address]:3000/"
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://root:root@[ip address]:5432/postgres_db"
+    depends_on:
+      - db
   db:
     image: postgres:alpine3.17
     environment:

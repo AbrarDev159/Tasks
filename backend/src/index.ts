@@ -10,7 +10,11 @@ app.use(express.json())
 
 // Tasks API
 app.get('/tasks', async (req, res) => {
-    const tasks = await prisma.task.findMany()
+    const tasks = await prisma.task.findMany({
+        orderBy: {
+            createdAt: "asc"
+        }
+    })
     res.json(tasks)
 })
 
@@ -62,7 +66,13 @@ app.get(`/collection/:id`, async (req, res) => {
     const { id } = req.params
     const collection = await prisma.collection.findUnique({
         where: { id: String(id) },
-        include: { tasks: true },
+        include: {
+            tasks: {
+                orderBy: {
+                    createdAt: "asc"
+                }
+            }
+        },
     })
     res.json(collection)
 })
