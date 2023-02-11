@@ -5,13 +5,13 @@ services:
     ports:
      - "5173:5173"
     environment:
-      VITE_API_URL: "http://[ip address]:3000/"
+      VITE_API_URL: ${VITE_API_URL}
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: "postgresql://root:root@[ip address]:5432/postgres_db"
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
   db:
