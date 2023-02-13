@@ -1,5 +1,7 @@
-import { PrismaClient } from '@prisma/client'
-import express from 'express'
+// import { PrismaClient } from '@prisma/client'
+// import express from 'express'
+const { PrismaClient } = require('@prisma/client')
+const express = require('express')
 
 const prisma = new PrismaClient()
 const app = express()
@@ -7,6 +9,10 @@ const cors = require('cors');
 
 app.use(cors({ origin: '*' }));
 app.use(express.json())
+
+app.get('/', (req, res) => {
+    res.send('Hello World2!')
+})
 
 // Tasks API
 app.get('/tasks', async (req, res) => {
